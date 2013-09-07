@@ -29,10 +29,10 @@ function WorldView(state, renderTarget) {
 
 		renderTileLayer(ctx, map.layers["BG Static"]);
 		renderTileLayer(ctx, map.layers["BG Building"]);
+		renderTileLayer(ctx, map.layers["BG Props"]);
 
 		state.actors.forEach(function(actor) { actor.render(ctx); });
-		
-		renderTileLayer(ctx, map.layers["BG Props"]);
+
 		renderTileLayer(ctx, map.layers["FG Props"]);
 	};
 }
@@ -102,6 +102,15 @@ window.onload = function() {
 		Jiko.Map.loadTileMap("levels/test1.xml").then(function(m){ state.map = m; })
 	])
 	.then(function(){
+		Jiko.Input.init();
+		Jiko.Input.bind({
+			"move-left" : Jiko.Input.Keys.LEFT,
+			"move-right": Jiko.Input.Keys.RIGHT,
+			"move-up"   : Jiko.Input.Keys.UP,
+			"move-down" : Jiko.Input.Keys.DOWN,
+			"act"       : Jiko.Input.Keys.SPACE
+		});
+
 		createActors(state);
 		Game(state);
 	});

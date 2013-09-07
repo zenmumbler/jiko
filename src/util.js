@@ -9,9 +9,8 @@ function log() {
 
 function extend(base, additions) {
 	for (var k in additions)
-		if (additions.hasOwnProperty(k)) {
+		if (additions.hasOwnProperty(k))
 			base[k] = additions[k];
-		}
 	return base;
 }
 

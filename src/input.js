@@ -7,10 +7,12 @@ var keys = [],
 
 function keyDown(event) {
 	keys[event.which] = true;
+	event.preventDefault();
 }
 
 function keyUp(event) {
 	keys[event.which] = false;
+	event.preventDefault();
 }
 
 function blur() {
@@ -25,7 +27,6 @@ function init() {
 	Jiko.listen(window, "keyup", keyUp);
 	Jiko.listen(window, "blur", blur);
 	Jiko.listen(window, "focus", focus);
-	return Q.defer().resolve();
 };
 
 function bind(map) { bindings = map; };
@@ -40,6 +41,17 @@ Jiko.Input = {
 	init: init,
 	bind: bind,
 	pressed: pressed
+};
+
+// key code enum
+Jiko.Input.Keys = {
+	UP: 38,
+	DOWN: 40,
+	LEFT: 37,
+	RIGHT: 39,
+
+	SPACE: 32,
+	RETURN: 13
 };
 
 

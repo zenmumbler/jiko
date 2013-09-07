@@ -50,11 +50,32 @@ function DefaultActorController(actor) {
 }
 
 
+function JikoActorController(actor) {
+	this.type = "jiko";
+
+	this.tick = function() {
+		if (Jiko.Input.pressed("move-left") && actor.x > 16)
+			actor.moveUnconstrained(-1, 0);
+		else if (Jiko.Input.pressed("move-right") && actor.x < 200)
+			actor.moveUnconstrained(1, 0);
+	};
+
+	this.collide = function(other) {};
+	this.render = function(ctx) {
+		var tex = actor.options.texture,
+			txy = tex.tileXY[actor.tilex],
+			gridSize = tex.grid;
+
+		ctx.drawImage(tex.image, txy.x, txy.y, gridSize, gridSize, actor.x, actor.y, gridSize, gridSize);
+	};
+}
+
+
 function makeActor(x, y, texture, tilex) {
 	return new Actor({
 		x: x, y: y, ix: tilex,
 		texture: texture
-	}, DefaultActorController);
+	}, (tilex == 53) ? JikoActorController : DefaultActorController);
 }
 
 
