@@ -38,45 +38,6 @@ function TileMap() {
 }
 
 
-// -- unused and not working anymore
-function pyxelTextTileMap(data) {
-	var tileMap = new TileMap(),
-		layer;
-
-	new Jiko.Util.TextFile(data)
-	.perLine(function(ln) {
-		var toks;
-		if (layer) {
-			if (! ln) {
-				layer = null;
-				return;
-			}
-			toks = ln.replace(/^,|,$/g, '').split(",");
-
-			// each line is an array of Tiles
-			layer.push(toks.map(function(t) {
-				return makeTile({ ix: parseInt(t) });
-			}));
-		}
-		else {
-			if (! ln) return;
-
-			toks = ln.split(" ");
-			if (toks[0] == "tileswide")
-				tileMap.width = parseInt(toks[1]);
-			else if (toks[0] == "tileshigh")
-				tileMap.height = parseInt(toks[1]);
-			else if (toks[0] == "layer")
-				layer = tileMap.layers[parseInt(toks[1])] = [];
-			else
-				console.info("ignored directive ", toks[0]);
-		}
-	});
-
-	return tileMap;
-}
-
-
 function pyxelXMLTileMap(data) {
 	var tileMap = new TileMap();
 
@@ -104,7 +65,7 @@ function pyxelXMLTileMap(data) {
 		[].forEach.call(layerNode.querySelectorAll("tile"), function(tile) {
 			var x = parseInt(attr(tile, "x")),
 				y = parseInt(attr(tile, "y")),
-				ix = parseInt(attr(tile, "index")),
+				ix = parseInt(attr(tile, "tile")),
 				flipX = attr(tile, "flipX") == "true";
 
 			if (ix > -1)
@@ -132,13 +93,13 @@ function loadTileMap(url) {
 
 
 // API
-Jiko.Map = {
-	TileLayer: TileLayer,
-	TileMap: TileMap,
+Jiko.Map = Jiko.api(
+	TileLayer,
+	TileMap,
 
-	makeTile: makeTile,
-	loadTileMap: loadTileMap
-};
+	makeTile,
+	loadTileMap
+);
 
 
 }());

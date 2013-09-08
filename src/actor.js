@@ -94,8 +94,8 @@ function makeActor(x, y, texture, tilex) {
 
 
 // API
-Jiko.Actor = {
-	makeActor: makeActor
-};
+Jiko.Actor = Jiko.api(
+	makeActor
+);
 	
 }());

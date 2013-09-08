@@ -37,7 +37,7 @@ function TiledTexture(image, gridSize) {
 			texCtx.drawImage(image, ox, oy, gridSize, gridSize, -ox-gridSize, oy + sh, gridSize, gridSize);
 		}
 	}
-	texCtx.scale(-1,1);
+	texCtx.scale(-1, 1);
 
 	// exposed image is the extnded version
 	this.image = texture;
@@ -105,12 +105,12 @@ function loadTextureSet(urls) {
 
 
 // API
-Jiko.Image = {
-	TiledTexture: TiledTexture,
+Jiko.Image = Jiko.api(
+	TiledTexture,
 
-	loadImage: loadImage,
-	loadTiledTexture: loadTiledTexture
-};
+	loadImage,
+	loadTiledTexture
+);
 
 	
 }());

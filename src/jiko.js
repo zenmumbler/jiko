@@ -4,7 +4,7 @@
 
 
 function WorldView(state, renderTarget) {
-	var map = state.map,
+	var map = state.level.map,
 		tex = state.texture,
 		gridSize = tex.grid;
 
@@ -31,7 +31,7 @@ function WorldView(state, renderTarget) {
 		renderTileLayer(ctx, map.layers["BG Building"]);
 		renderTileLayer(ctx, map.layers["BG Props"]);
 
-		state.actors.forEach(function(actor) { actor.render(ctx); });
+		state.level.actors.forEach(function(actor) { actor.render(ctx); });
 
 		renderTileLayer(ctx, map.layers["FG Props"]);
 	};
@@ -52,7 +52,6 @@ function RenderTarget(sel, scale) {
 function State() {
 	this.level = null;
 	this.texture = null;
-	this.actors = [];
 }
 
 
@@ -63,34 +62,14 @@ function Game(state) {
 		view = new WorldView(state, renderTarget);
 
 	function step() {
-		state.actors.forEach(function(actor) { actor.tick(); });
+		state.level.tick(state);
 		view.render();
 
 		requestAnimationFrame(step);
 	}
 
+	state.level.start(state);
 	step();
-}
-
-
-function createActors(state) {
-	var actorLayer = state.map.layers["Actors"],
-		x, y, row, tile, grid;
-
-	grid = state.texture.grid;
-
-	for (y=0; y < actorLayer.height; ++y) {
-		row = actorLayer[y];
-
-		for (x=0; x < actorLayer.width; ++x) {
-			tile = row[x];
-			if (tile && tile.ix >= 0) {
-				console.info(x * grid, y * grid, state.texture, tile.ix);
-				var actor = Jiko.Actor.makeActor(x * grid, y * grid, state.texture, tile.ix);
-				state.actors.push(actor);
-			}
-		}
-	}
 }
 
 
@@ -99,7 +78,7 @@ window.onload = function() {
 
 	Q.all([
 		Jiko.Image.loadTiledTexture("gfx/jiko-tiles.png", 16).then(function(tex){ state.texture = tex; }),
-		Jiko.Map.loadTileMap("levels/test1.xml").then(function(m){ state.map = m; })
+		Jiko.Level.load("test1").then(function(level){ state.level = level; })
 	])
 	.then(function(){
 		Jiko.Input.init();
@@ -111,7 +90,6 @@ window.onload = function() {
 			"act"       : Jiko.Input.Keys.SPACE
 		});
 
-		createActors(state);
 		Game(state);
 	});
 };

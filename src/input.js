@@ -7,12 +7,14 @@ var keys = [],
 
 function keyDown(event) {
 	keys[event.which] = true;
-	event.preventDefault();
+	if (! event.metaKey)
+		event.preventDefault();
 }
 
 function keyUp(event) {
 	keys[event.which] = false;
-	event.preventDefault();
+	if (! event.metaKey)
+		event.preventDefault();
 }
 
 function blur() {
@@ -37,11 +39,11 @@ function pressed(name) {
 
 
 // API
-Jiko.Input = {
-	init: init,
-	bind: bind,
-	pressed: pressed
-};
+Jiko.Input = Jiko.api(
+	init,
+	bind,
+	pressed
+);
 
 // key code enum
 Jiko.Input.Keys = {

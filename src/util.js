@@ -15,6 +15,21 @@ function extend(base, additions) {
 }
 
 
+function api(/* functionRefs */) {
+	var intf = {},
+		fns = [].slice.call(arguments, 0);
+
+	fns.forEach(function(fn) {
+		if (fn.name)
+			intf[fn.name] = fn;
+		else
+			log("interface: cannot expose anonymous function", fn);
+	});
+	return intf;
+}
+
+
+
 function elem(sel) {
 	return (typeof sel == "string") ? document.querySelector(sel) : sel;
 }
@@ -42,7 +57,7 @@ function load(opts) {
 	}
 
 	try {
-		xhr.open("GET", opts.url, true);
+		xhr.open("GET", opts.url + "?D=" + Date.now(), true);
 		if (opts.configRequest)
 			opts.configRequest(xhr);
 		xhr.onload = load;
@@ -53,7 +68,20 @@ function load(opts) {
 
 	xhr.send();
 	return response.promise;
-};
+}
+
+
+function loadScript(url) {
+	var defer = Q.defer(),
+		script = document.createElement("script");
+
+	script.src = url + "?D=" + Date.now();
+	script.onload = function() { defer.resolve(); };
+	script.onerror = function() { defer.reject("Could not load script at " + url); };
+
+	document.head.appendChild(script);
+	return defer.promise;
+}
 
 
 function TextFile(data) {
@@ -78,20 +106,25 @@ function TextFile(data) {
 
 
 // API
-Jiko.Util = {
-	TextFile: TextFile,
+Jiko.Util = api(
+	TextFile,
 
-	log: log,
-	extend: extend,
-	elem: elem,
-	listen: listen,
-	load: load
-};
+	log,
+	extend,
+	api,
+	elem,
+	listen,
+	load,
+	loadScript
+);
 
-// mirror often used stuff in the Jiko ns
-Jiko.log = Jiko.Util.log;
-Jiko.extend = Jiko.Util.extend;
-Jiko.elem = Jiko.Util.elem;
-Jiko.listen = Jiko.Util.listen;
+// put often used stuff in the Jiko ns
+extend(Jiko, api(
+	log,
+	extend,
+	api,
+	elem,
+	listen
+));
 
 }());
