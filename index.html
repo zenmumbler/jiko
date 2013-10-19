@@ -6,15 +6,19 @@
 html{background: #000;}
 .w{margin:100px auto 0 auto; width: 960px;}
 </style>
-<script>window.Jiko = {};</script>
+
 <script src="src/ext/q.js"></script>
-<script src="src/util.js"></script>
-<script src="src/map.js"></script>
-<script src="src/image.js"></script>
-<script src="src/level.js"></script>
-<script src="src/actor.js"></script>
-<script src="src/input.js"></script>
-<script src="src/jiko.js"></script>
-</script></head>
+<script src="src/ext/traceur.js"></script>
+
+<script>
+Q.longStackSupport = true;
+traceur.options.experimental = true;
+new traceur.WebPageProject(document.location.href).run(function() { main(); });
+</script>
+
+<script type="text/traceur" src="src/util.js"></script>
+<script type="text/traceur" src="src/jiko.js"></script>
+
+</head>
 <body><div class="w"><canvas width="960" height="720"></canvas></div></body>
 </html>

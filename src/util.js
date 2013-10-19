@@ -1,130 +1,87 @@
-(function(){
-"use strict";
 // Part of jiko - © 2013 Arthur Langereis & Taco Ekkel
 
-function log() {
-	console.info.apply(console, arguments);
-}
-
-
-function extend(base, additions) {
-	for (var k in additions)
-		if (additions.hasOwnProperty(k))
-			base[k] = additions[k];
-	return base;
-}
-
-
-function api(/* functionRefs */) {
-	var intf = {},
-		fns = [].slice.call(arguments, 0);
-
-	fns.forEach(function(fn) {
-		if (fn.name)
-			intf[fn.name] = fn;
-		else
-			log("interface: cannot expose anonymous function", fn);
-	});
-	return intf;
-}
-
-
-
-function elem(sel) {
-	return (typeof sel == "string") ? document.querySelector(sel) : sel;
-}
-
-
-function listen(sel, name, handler) {
-	elem(sel).addEventListener(name, handler, false);
-}
-
-
-function load(opts) {
-	var xhr = new XMLHttpRequest(),
-		response = Q.defer();
-
-	function fail() {
-		console.info("ASSETS FAIL");
-		response.reject.apply(response, arguments);
+module "Util" {
+	export function log(...args) {
+		console.info.apply(console, args);
 	}
 
-	function load() {
-		if (xhr.status == 200 || (xhr.status === 0 && xhr.response))
-			response.resolve(xhr);
-		else
-			fail("Failed to load asset with options", opts);
+	export function elem(sel) {
+		return (typeof sel == "string") ? document.querySelector(sel) : sel;
 	}
 
-	try {
-		xhr.open("GET", opts.url + "?D=" + Date.now(), true);
-		if (opts.configRequest)
-			opts.configRequest(xhr);
-		xhr.onload = load;
-		xhr.onerror = fail;
-	} catch (e) {
-		fail(e.message, e);
+
+	export function listen(sel, name, handler) {
+		elem(sel).addEventListener(name, handler, false);
 	}
 
-	xhr.send();
-	return response.promise;
-}
 
+	export function load(opts) {
+		var xhr = new XMLHttpRequest(),
+			response = Q.defer();
 
-function loadScript(url) {
-	var defer = Q.defer(),
-		script = document.createElement("script");
+		function fail() {
+			console.info("ASSETS FAIL");
+			response.reject.apply(response, arguments);
+		}
 
-	script.src = url + "?D=" + Date.now();
-	script.onload = function() { defer.resolve(); };
-	script.onerror = function() { defer.reject("Could not load script at " + url); };
+		function load() {
+			if (xhr.status == 200 || (xhr.status === 0 && xhr.response))
+				response.resolve(xhr);
+			else
+				fail("Failed to load asset with options", opts);
+		}
 
-	document.head.appendChild(script);
-	return defer.promise;
-}
+		try {
+			xhr.open("GET", opts.url + "?D=" + Date.now(), true);
+			if (opts.configRequest)
+				opts.configRequest(xhr);
+			xhr.onload = load;
+			xhr.onerror = fail;
+		} catch (e) {
+			fail(e.message, e);
+		}
 
-
-function TextFile(data) {
-	function line() {
-		if (! data)
-			return null;
-
-		var endl = data.indexOf("\n");
-		if (endl < 0)
-			endl = data.length;
-
-		var ln = data.slice(0, endl);
-		data = data.slice(endl + 1);
-		return ln;
+		xhr.send();
+		return response.promise;
 	}
 
-	this.perLine = function(fn) {
-		for (var l = line(); l != null; l = line())
-			fn(l);
-	};
+
+	export function loadScript(url) {
+		var defer = Q.defer(),
+			script = document.createElement("script");
+
+		script.src = url + "?D=" + Date.now();
+		script.onload = function() { defer.resolve(); };
+		script.onerror = function() { defer.reject("Could not load script at " + url); };
+
+		document.head.appendChild(script);
+		return defer.promise;
+	}
+
+	import {Name} from "@name";
+
+	export class TextFile {
+		constructor(data) {
+			this.data = data;
+		}
+
+		line() {
+			if (! this.data)
+				return null;
+
+			var endl = this.data.indexOf("\n");
+			if (endl < 0)
+				endl = this.data.length;
+
+			var ln = this.data.slice(0, endl);
+			this.data = this.data.slice(endl + 1);
+			return ln;
+		};
+
+		perLine(fn) {
+			for (var l = line(); l != null; l = line())
+				fn(l);
+		};
+	}
+
 }
-
-
-// API
-Jiko.Util = api(
-	TextFile,
-
-	log,
-	extend,
-	api,
-	elem,
-	listen,
-	load,
-	loadScript
-);
-
-// put often used stuff in the Jiko ns
-extend(Jiko, api(
-	log,
-	extend,
-	api,
-	elem,
-	listen
-));
-
-}());
