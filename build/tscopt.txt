@@ -1,0 +1,6 @@
+--noImplicitAny
+--allowbool
+--removeComments
+--sourcemap
+--target ES5
+

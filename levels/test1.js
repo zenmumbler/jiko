@@ -6,7 +6,7 @@ function createActors(state) {
 	var actorLayer = state.level.map.layers["Actors"],
 		x, y, row, tile, grid;
 
-	grid = state.texture.grid;
+	grid = state.texture.gridSize;
 
 	for (y=0; y < actorLayer.height; ++y) {
 		row = actorLayer[y];
@@ -15,7 +15,7 @@ function createActors(state) {
 			tile = row[x];
 			if (tile && tile.ix >= 0) {
 				// Jiko.log(x * grid, y * grid, state.texture, tile.ix);
-				var actor = Jiko.Actor.makeActor(x * grid, y * grid, state.texture, tile.ix);
+				var actor = Jiko.Actors.makeActor(x * grid, y * grid, state.texture, tile.ix);
 				state.level.actors.push(actor);
 			}
 		}
@@ -43,8 +43,8 @@ function finish(state) {
 }
 
 
-Jiko.Level.delegate("test1",
-	Jiko.api(setup, start, tick, finish)
+Jiko.Levels.delegate("test1",
+	{setup:setup, start:start, tick:tick, finish:finish}
 );
 
 
