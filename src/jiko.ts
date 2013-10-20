@@ -1,5 +1,16 @@
 // jiko.ts - Jiko main
 
+interface CanvasRenderingContext2D {
+	webkitImageSmoothingEnabled: boolean;
+	mozImageSmoothingEnabled: boolean;
+	imageSmoothingEnabled: boolean;
+}
+
+interface Window {
+	mozRequestAnimationFrame(callback: FrameRequestCallback): number;
+	webkitRequestAnimationFrame(callback: FrameRequestCallback): number;
+}
+
 module Jiko.Temp {
 
 	class WorldView {
