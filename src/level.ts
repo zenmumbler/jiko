@@ -17,7 +17,7 @@ module Jiko.Levels {
 	export class Level {
 		map: Jiko.Map.TileMap = null;
 		delegate: LevelDelegate = null;
-		actors: Actors.Actor[] = [];
+		actors: Actor.Actor[] = [];
 
 		start(state: State) {
 			this.delegate.setup(state);

@@ -44,7 +44,7 @@ module Jiko.Temp {
 			this.renderTileLayer(ctx, map.layers["BG Building"]);
 			this.renderTileLayer(ctx, map.layers["BG Props"]);
 
-			this.state.level.actors.forEach((actor: Actors.Actor) => actor.render(ctx));
+			this.state.level.actors.forEach((actor: Actor.Actor) => actor.render(ctx));
 
 			this.renderTileLayer(ctx, map.layers["FG Props"]);
 		}

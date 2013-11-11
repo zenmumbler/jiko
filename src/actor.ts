@@ -1,6 +1,6 @@
 // Part of jiko - © 2013 Arthur Langereis & Taco Ekkel
 
-module Jiko.Actors {
+module Jiko.Actor {
 	/*
 	- animation
 		[] frame index + duration + frame offset

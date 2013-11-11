@@ -91,7 +91,7 @@ module Jiko.Map {
 			if (ext == "xml")
 				return pyxelXMLTileMap(xhr.responseXML);
 
-			return Q.defer().reject("Don't know how to read map data @ " + url);
+			return null;
 		});
 	}
 }

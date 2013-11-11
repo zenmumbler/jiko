@@ -35,7 +35,7 @@ var Jiko;
             function load() {
                 if (xhr.status == 200 || (xhr.status === 0 && xhr.response))
                     response.resolve(xhr);
-else
+                else
                     fail("Failed to load asset with options", opts);
             }
 
@@ -163,9 +163,9 @@ var Jiko;
             eachAttr(data.childNodes[0], function (key, val) {
                 if (key == "tileswide")
                     tileMap.width = parseInt(val);
-else if (key == "tileshigh")
+                else if (key == "tileshigh")
                     tileMap.height = parseInt(val);
-else
+                else
                     console.info("ignored tilemap directive ", key);
             });
 
@@ -189,7 +189,7 @@ else
                 if (ext == "xml")
                     return pyxelXMLTileMap(xhr.responseXML);
 
-                return Q.defer().reject("Don't know how to read map data @ " + url);
+                return null;
             });
         }
         Map.loadTileMap = loadTileMap;
@@ -386,7 +386,9 @@ var __extends = this.__extends || function (d, b) {
 };
 var Jiko;
 (function (Jiko) {
-    (function (Actors) {
+    (function (_Actor) {
+        
+
         var Actor = (function () {
             function Actor(options, ctrl) {
                 this.options = options;
@@ -422,7 +424,7 @@ var Jiko;
             };
             return Actor;
         })();
-        Actors.Actor = Actor;
+        _Actor.Actor = Actor;
 
         var DefaultActorController = (function () {
             function DefaultActorController() {
@@ -450,7 +452,7 @@ var Jiko;
             JikoActorController.prototype.tick = function () {
                 if (Jiko.Input.pressed("move-left") && this.actor.x > 16)
                     this.actor.moveUnconstrained(-1, 0);
-else if (Jiko.Input.pressed("move-right") && this.actor.x < 200)
+                else if (Jiko.Input.pressed("move-right") && this.actor.x < 200)
                     this.actor.moveUnconstrained(1, 0);
             };
             return JikoActorController;
@@ -458,16 +460,15 @@ else if (Jiko.Input.pressed("move-right") && this.actor.x < 200)
 
         function makeActor(x, y, texture, tilex) {
             return new Actor({
-                x: x,
-                y: y,
-                ix: tilex,
+                x: x, y: y, ix: tilex,
                 texture: texture
-            }, new ((tilex == 53) ? JikoActorController : DefaultActorController)());
+            }, new ((tilex == 53) ? JikoActorController : DefaultActorController));
         }
-        Actors.makeActor = makeActor;
-    })(Jiko.Actors || (Jiko.Actors = {}));
-    var Actors = Jiko.Actors;
+        _Actor.makeActor = makeActor;
+    })(Jiko.Actor || (Jiko.Actor = {}));
+    var Actor = Jiko.Actor;
 })(Jiko || (Jiko = {}));
+
 var Jiko;
 (function (Jiko) {
     (function (Temp) {
@@ -554,11 +555,11 @@ window.onload = function () {
     ]).then(function () {
         Jiko.Input.init();
         Jiko.Input.bind({
-            "move-left": Jiko.Input.Keys.LEFT,
-            "move-right": Jiko.Input.Keys.RIGHT,
-            "move-up": Jiko.Input.Keys.UP,
-            "move-down": Jiko.Input.Keys.DOWN,
-            "act": Jiko.Input.Keys.SPACE
+            "move-left": 37 /* LEFT */,
+            "move-right": 39 /* RIGHT */,
+            "move-up": 38 /* UP */,
+            "move-down": 40 /* DOWN */,
+            "act": 32 /* SPACE */
         });
 
         Jiko.Temp.Game(state);
